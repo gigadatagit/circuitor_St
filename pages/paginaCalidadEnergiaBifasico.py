@@ -63,7 +63,8 @@ if 'correo_electronico' in st.session_state:
             ---
             """)
             
-            var1 = st.number_input("Ingrese el Valor Nominal de Tensión:", min_value=0.0, max_value=1000.0, step=0.1, format="%.1f")
+            var1 = st.number_input("Ingrese el Valor Nominal de Tensión (FASE-NEUTRO):", min_value=0.0, max_value=1000.0, step=0.1, format="%.1f")
+            var_Calculo_Inominal = st.number_input("Ingrese el Valor Nominal de Tensión (FASE-FASE):", min_value=0.0, max_value=1000.0, step=0.1, format="%.1f")
             var2 = st.number_input("Ingrese el Valor de la Capacidad del Transformador:", min_value=0.0, max_value=1000000.0, step=0.1, format="%.1f")
             var3 = st.number_input("Ingrese el Valor de Referencia - Desbalance de Tensión:", min_value=0.0, max_value=2.0, step=0.1, format="%.1f")
             var4 = st.number_input("Ingrese el Valor de Referencia - Desbalance de Corriente:", min_value=0.0, max_value=20.0, step=0.1, format="%.1f")
@@ -80,7 +81,7 @@ if 'correo_electronico' in st.session_state:
                             
                     print(f"Limites de Tensión - Inferior ({var_Limite_Inferior_Tension}) y Superior({var_Limite_Superior_Tension})")
 
-                    var_Corriente_Nominal_Value = calcular_Valor_Corriente_Nominal((var2 * 1000), var1)
+                    var_Corriente_Nominal_Value = calcular_Valor_Corriente_Nominal((var2 * 1000), var_Calculo_Inominal)
                     
                     #df = pd.read_parquet(uploaded_file)
                     df_Read = pd.read_csv(uploaded_file, delimiter=';', encoding="UTF-8-SIG", encoding_errors='ignore')
@@ -113,6 +114,7 @@ if 'correo_electronico' in st.session_state:
                     if plantillaSeleccionada == "Vatia":
                         
                         print("a")
+                        #var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/365a61d9e72f3e175c39d5fa6cb1c189e0c70ffa/vars_Template_ETV_Circuitor_VATIA.docx?raw=true"
                         var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/f3f44250a3b53581fb6d788e6f9717d4ac374b87/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
                     
                     elif plantillaSeleccionada == "GIGA":
@@ -137,13 +139,13 @@ if 'correo_electronico' in st.session_state:
                     doc = DocxTemplate(template_data)
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para la tensión
-                    list_Columns_Grafico_Tension: list = ['Tensin L12', 'Tensin L23', 'Tensin L31']
+                    list_Columns_Grafico_Tension: list = ['Tensin L1', 'Tensin L2']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para el Desbalance de Tensión
                     list_Columns_Grafico_DesbTension: list = ['Desbalance']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para la corriente
-                    list_Columns_Grafico_Corriente: list = ['Corriente mx. L1', 'Corriente mx. L2', 'Corriente mx. L3', 'Corriente de neutro']
+                    list_Columns_Grafico_Corriente: list = ['Corriente mx. L1', 'Corriente mx. L2', 'Corriente de neutro']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para el Desbalance de Tensión
                     list_Columns_Grafico_DesbCorriente: list = ['Desbalance']
@@ -161,49 +163,49 @@ if 'correo_electronico' in st.session_state:
                     list_Columns_Graficos_Consolidado_Energia: list = ['E.Activa T1', 'E.Capacitiva T1', 'E.Inductiva T1', 'KVARH_CAP', 'KARH_IND']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para el Análisis de Distorsión de Tensión
-                    list_Columns_Distorsion_Tension: list = ['V THD/d Mx. L1', 'V THD/d Mx. L2', 'V THD/d Mx. L3']
+                    list_Columns_Distorsion_Tension: list = ['V THD/d Mx. L1', 'V THD/d Mx. L2']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para el Análisis de Distorsión de Corriente
-                    list_Columns_Distorsion_Corriente: list = ['A THD/d L1', 'A THD/d L2', 'A THD/d L3']
+                    list_Columns_Distorsion_Corriente: list = ['A THD/d L1', 'A THD/d L2']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para el Análisis del Listado de Armónicos de Cargabilidad TDD
-                    list_Columns_Armonicos_Cargabilidad_TDD: list = ['resultado_TDD_L1', 'resultado_TDD_L2', 'resultado_TDD_L3']
+                    list_Columns_Armonicos_Cargabilidad_TDD: list = ['resultado_TDD_L1', 'resultado_TDD_L2']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para el Análisis del Flicker
-                    list_Columns_Flicker: list = ['Plt L1', 'Plt L2', 'Plt L3']
+                    list_Columns_Flicker: list = ['Plt L1', 'Plt L2']
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para el Análisis del Factor K
-                    list_Columns_FactorK: list = ['Factor K L1', 'Factor K L2', 'Factor K L3']
+                    list_Columns_FactorK: list = ['Factor K L1', 'Factor K L2']
 
 
 
                     # Declaración de todos los DataFrames filtrando por las columnas que se van a Utilizar para generar el Documento y Realizar los Cálculos o Gráficos
 
-                    df_Tabla_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Tensin mn. L12', 'Tensin L12', 'Tensin mx. L12', 'Tensin mn. L23', 'Tensin L23', 'Tensin mx. L23', 'Tensin mn. L31', 'Tensin L31', 'Tensin mx. L31'], df)
+                    df_Tabla_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Tensin mn. L1', 'Tensin L1', 'Tensin mx. L1', 'Tensin mn. L2', 'Tensin L2', 'Tensin mx. L2'], df)
 
-                    df_Tabla_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Corriente mn. L1', 'Corriente L1', 'Corriente mx. L1', 'Corriente mn. L2', 'Corriente L2', 'Corriente mx. L2', 'Corriente mn. L3', 'Corriente L3', 'Corriente mx. L3', 'Corriente de neutro mn.', 'Corriente de neutro', 'Corriente de neutro mx.'], df)
+                    df_Tabla_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Corriente mn. L1', 'Corriente L1', 'Corriente mx. L1', 'Corriente mn. L2', 'Corriente L2', 'Corriente mx. L2', 'Corriente de neutro mn.', 'Corriente de neutro', 'Corriente de neutro mx.'], df)
 
-                    df_Tabla_Desbalance_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Tensin L12', 'Tensin L23', 'Tensin L31'], df)
+                    df_Tabla_Desbalance_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Tensin L1', 'Tensin L2'], df)
 
-                    df_Tabla_Desbalance_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Corriente L1', 'Corriente L2', 'Corriente L3'], df)
+                    df_Tabla_Desbalance_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Corriente L1', 'Corriente L2'], df)
 
                     df_Tabla_PQS_Potencias = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'P.Activa mn. III', 'P.Activa III', 'P.Activa mx. III', 'P.Capacitiva mn. III', 'P.Capacitiva III', 'P.Capacitiva mx. III', 'P.Inductiva mn. III', 'P.Inductiva III', 'P.Inductiva mx. III', 'P.Aparente mn. III', 'P.Aparente III', 'P.Aparente mx. III'], df)
 
                     df_Tabla_FactorPotencia = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'F.P. Mn. III -', 'F.P. III -', 'F.P. Mx. III -', 'F.P. Mn. III', 'F.P. III', 'F.P. Mx. III'], df)
 
-                    df_Tabla_Distorsion_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'V THD/d Mx. L1', 'V THD/d Mx. L2', 'V THD/d Mx. L3'], df)
+                    df_Tabla_Distorsion_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'V THD/d Mx. L1', 'V THD/d Mx. L2'], df)
 
-                    df_Tabla_Armonicos_Distorsion_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Arm. tensin 3 L1', 'Arm. tensin 5 L1', 'Arm. tensin 7 L1', 'Arm. tensin 9 L1', 'Arm. tensin 11 L1', 'Arm. tensin 13 L1', 'Arm. tensin 15 L1', 'Arm. tensin 3 L2', 'Arm. tensin 5 L2', 'Arm. tensin 7 L2', 'Arm. tensin 9 L2', 'Arm. tensin 11 L2', 'Arm. tensin 13 L2', 'Arm. tensin 15 L2', 'Arm. tensin 3 L3', 'Arm. tensin 5 L3', 'Arm. tensin 7 L3', 'Arm. tensin 9 L3', 'Arm. tensin 11 L3', 'Arm. tensin 13 L3', 'Arm. tensin 15 L3'], df)
+                    df_Tabla_Armonicos_Distorsion_Tension = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Arm. tensin 3 L1', 'Arm. tensin 5 L1', 'Arm. tensin 7 L1', 'Arm. tensin 9 L1', 'Arm. tensin 11 L1', 'Arm. tensin 13 L1', 'Arm. tensin 15 L1', 'Arm. tensin 3 L2', 'Arm. tensin 5 L2', 'Arm. tensin 7 L2', 'Arm. tensin 9 L2', 'Arm. tensin 11 L2', 'Arm. tensin 13 L2', 'Arm. tensin 15 L2'], df)
 
-                    df_Tabla_Distorsion_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'A THD/d L1', 'A THD/d L2', 'A THD/d L3'], df)
+                    df_Tabla_Distorsion_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'A THD/d L1', 'A THD/d L2'], df)
 
-                    df_Tabla_Armonicos_Distorsion_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Arm. corriente 3 L1', 'Arm. corriente 5 L1', 'Arm. corriente 7 L1', 'Arm. corriente 9 L1', 'Arm. corriente 11 L1', 'Arm. corriente 13 L1', 'Arm. corriente 15 L1', 'Arm. corriente 3 L2', 'Arm. corriente 5 L2', 'Arm. corriente 7 L2', 'Arm. corriente 9 L2', 'Arm. corriente 11 L2', 'Arm. corriente 13 L2', 'Arm. corriente 15 L2', 'Arm. corriente 3 L3', 'Arm. corriente 5 L3', 'Arm. corriente 7 L3', 'Arm. corriente 9 L3', 'Arm. corriente 11 L3', 'Arm. corriente 13 L3', 'Arm. corriente 15 L3'], df)
+                    df_Tabla_Armonicos_Distorsion_Corriente = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Arm. corriente 3 L1', 'Arm. corriente 5 L1', 'Arm. corriente 7 L1', 'Arm. corriente 9 L1', 'Arm. corriente 11 L1', 'Arm. corriente 13 L1', 'Arm. corriente 15 L1', 'Arm. corriente 3 L2', 'Arm. corriente 5 L2', 'Arm. corriente 7 L2', 'Arm. corriente 9 L2', 'Arm. corriente 11 L2', 'Arm. corriente 13 L2', 'Arm. corriente 15 L2'], df)
 
-                    df_Tabla_Armonicos_Cargabilidad_TDD = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'A THD/d L1', 'A THD/d L2', 'A THD/d L3', 'Corriente mx. L1', 'Corriente mx. L2', 'Corriente mx. L3'], df)
+                    df_Tabla_Armonicos_Cargabilidad_TDD = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'A THD/d L1', 'A THD/d L2', 'Corriente mx. L1', 'Corriente mx. L2'], df)
 
                     #df_Tabla_Flicker = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Plt L1', 'Plt L2', 'Plt L3'], df)
 
-                    df_Tabla_FactorK = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Factor K mn. L1', 'Factor K L1', 'Factor K mx. L1', 'Factor K mn. L2', 'Factor K L2', 'Factor K mx. L2', 'Factor K mn. L3', 'Factor K L3', 'Factor K mx. L3'], df)
+                    df_Tabla_FactorK = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'Factor K mn. L1', 'Factor K L1', 'Factor K mx. L1', 'Factor K mn. L2', 'Factor K L2', 'Factor K mx. L2'], df)
 
                     df_Tabla_FactorPotencia_Grupos = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'F.P. Mn. III', 'F.P. III', 'F.P. Mx. III'], df)
 
@@ -464,7 +466,7 @@ if 'correo_electronico' in st.session_state:
 
                     print('--'*30)
 
-                    valor_Maximo_Corrientes = df[list_Columns_Grafico_Corriente[0:3]].max().max()
+                    valor_Maximo_Corrientes = df[list_Columns_Grafico_Corriente[0:2]].max().max()
 
                     print(f"Valor Máximo de de las Corrientes: {valor_Maximo_Corrientes}")
 
@@ -486,7 +488,7 @@ if 'correo_electronico' in st.session_state:
 
                     print('--'*30)
 
-                    df_Tabla_TDD = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'fecha_y_Hora', 'resultado_TDD_L1', 'resultado_TDD_L2', 'resultado_TDD_L3'], df_Tabla_Armonicos_Cargabilidad_TDDFinal)
+                    df_Tabla_TDD = filtrar_DataFrame_Por_Columnas(['Fecha/hora', 'fecha_y_Hora', 'resultado_TDD_L1', 'resultado_TDD_L2'], df_Tabla_Armonicos_Cargabilidad_TDDFinal)
 
                     df_Tabla_TDDFinal = crear_DataFrame_CargabilidadTDD_Final(df_Tabla_TDD, valor_Limite_TDD)
 
@@ -538,22 +540,22 @@ if 'correo_electronico' in st.session_state:
                     # En este lugar declaramos diccionarios con los percentiles para utilizarlos luego en gráficos o en otras partes del código
 
                     data_Percentiles_Tension: dict = {
-                        'PERCENTIL_TENSIN_L12': round(df_Tabla_Calculos_Tension['Tensin L12'].iloc[0], 2),
-                        'PERCENTIL_TENSIN_L23': round(df_Tabla_Calculos_Tension['Tensin L23'].iloc[0], 2),
-                        'PERCENTIL_TENSIN_L31': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[0], 2)
+                        'PERCENTIL_TENSIN_L12': round(df_Tabla_Calculos_Tension['Tensin L1'].iloc[0], 2),
+                        'PERCENTIL_TENSIN_L23': round(df_Tabla_Calculos_Tension['Tensin L2'].iloc[0], 2),
+                        #'PERCENTIL_TENSIN_L31': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[0], 2)
                     }
 
                     data_Percentiles_Corriente: dict = {
                         'PERCENTIL_CORR_MAX_L1': round(df_Tabla_Calculos_Corriente['Corriente mx. L1'].iloc[0], 2),
                         'PERCENTIL_CORR_MAX_L2': round(df_Tabla_Calculos_Corriente['Corriente mx. L2'].iloc[0], 2),
-                        'PERCENTIL_CORR_MAX_L3': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2),
+                        #'PERCENTIL_CORR_MAX_L3': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2),
                         'PERCENTIL_CORR_MED_LN': round(df_Tabla_Calculos_Corriente['Corriente de neutro'].iloc[0], 2)
                     }
 
                     data_Percentiles_Corriente_Maximos: dict = {
                         'PERCENTIL_CORR_MAX_L1': round(df_Tabla_Calculos_Corriente['Corriente mx. L1'].iloc[0], 2),
                         'PERCENTIL_CORR_MAX_L2': round(df_Tabla_Calculos_Corriente['Corriente mx. L2'].iloc[0], 2),
-                        'PERCENTIL_CORR_MAX_L3': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2)
+                        #'PERCENTIL_CORR_MAX_L3': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2)
                     }
 
                     data_Percentiles_DesbTension: dict = {
@@ -588,19 +590,19 @@ if 'correo_electronico' in st.session_state:
                     data_Percentiles_DistorsionTension: dict = {
                         'PERCENTIL_THDV_MAX_L1': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L1'].iloc[0],2),
                         'PERCENTIL_THDV_MAX_L2': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L2'].iloc[0],2),
-                        'PERCENTIL_THDV_MAX_L3': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[0],2)
+                        #'PERCENTIL_THDV_MAX_L3': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[0],2)
                     }
 
                     data_Percentiles_DistorsionCorriente: dict = {
                         'PERCENTIL_THDI_MAX_L1': round(df_Tabla_Calculos_DistCorriente['A THD/d L1'].iloc[0],2),
                         'PERCENTIL_THDI_MAX_L2': round(df_Tabla_Calculos_DistCorriente['A THD/d L2'].iloc[0],2),
-                        'PERCENTIL_THDI_MAX_L3': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[0],2)
+                        #'PERCENTIL_THDI_MAX_L3': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[0],2)
                     }
 
                     data_Percentiles_CargabilidadTDD: dict = {
                         'PERCENTIL_TDD_L1': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L1'].iloc[0],2),
                         'PERCENTIL_TDD_L2': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L2'].iloc[0],2),
-                        'PERCENTIL_TDD_L3': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[0],2)
+                        #'PERCENTIL_TDD_L3': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[0],2)
                     }
 
                     #"""
@@ -616,7 +618,7 @@ if 'correo_electronico' in st.session_state:
                     data_Percentiles_FactorK: dict = {
                         'PERCENTIL_FACTORK_L1_MED': round(df_Tabla_Calculos_FactorK['Factor K L1'].iloc[0], 2),
                         'PERCENTIL_FACTORK_L2_MED': round(df_Tabla_Calculos_FactorK['Factor K L2'].iloc[0], 2),
-                        'PERCENTIL_FACTORK_L3_MED': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[0], 2)
+                        #'PERCENTIL_FACTORK_L3_MED': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[0], 2)
                     }
                     
                     
@@ -703,7 +705,7 @@ if 'correo_electronico' in st.session_state:
 
                     # Aquí hay una lista que almacena cada uno de los valores de la Variación para cada Percentil de las Tensiones
 
-                    var_Lista_Variaciones = calcular_Variacion_Tension(lista_Percentiles=[df_Tabla_Calculos_Tension['Tensin mn. L12'].iloc[0], df_Tabla_Calculos_Tension['Tensin mn. L23'].iloc[0], df_Tabla_Calculos_Tension['Tensin mn. L31'].iloc[0], df_Tabla_Calculos_Tension['Tensin mx. L12'].iloc[0], df_Tabla_Calculos_Tension['Tensin mx. L23'].iloc[0], df_Tabla_Calculos_Tension['Tensin mx. L31'].iloc[0]], val_Nom=var1)
+                    var_Lista_Variaciones = calcular_Variacion_Tension(lista_Percentiles=[df_Tabla_Calculos_Tension['Tensin mn. L1'].iloc[0], df_Tabla_Calculos_Tension['Tensin mn. L2'].iloc[0], df_Tabla_Calculos_Tension['Tensin mx. L1'].iloc[0], df_Tabla_Calculos_Tension['Tensin mx. L2'].iloc[0]], val_Nom=var1)
 
                     var_Lista_PQS_Carg_Disp = [calcular_Valor_Cargabilidad_Disponibilidad(var2, df_Tabla_Calculos_PQS_Potencias['P.Aparente mx. III'].iloc[0])[0], calcular_Valor_Cargabilidad_Disponibilidad(var2, df_Tabla_Calculos_PQS_Potencias['P.Aparente mx. III'].iloc[0])[1]]
 
@@ -715,7 +717,7 @@ if 'correo_electronico' in st.session_state:
 
                     print('--'*30)
 
-                    listado_Percentiles_Tension: list = [round(df_Tabla_Calculos_Tension['Tensin mn. L12'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin L12'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mx. L12'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mn. L23'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin L23'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mx. L23'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mn. L31'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mx. L31'].iloc[0], 2),]
+                    listado_Percentiles_Tension: list = [round(df_Tabla_Calculos_Tension['Tensin mn. L1'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin L1'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mx. L1'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mn. L2'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin L2'].iloc[0], 2), round(df_Tabla_Calculos_Tension['Tensin mx. L2'].iloc[0], 2)]
 
                     listado_Limites_Tension: list = [var_Limite_Inferior_Tension, var_Limite_Superior_Tension]
 
@@ -730,9 +732,9 @@ if 'correo_electronico' in st.session_state:
                         'CORRIENTE_L2_MIN': round(df_Tabla_Calculos_Corriente['Corriente mn. L2'].iloc[0], 2),
                         'CORRIENTE_L2_MED': round(df_Tabla_Calculos_Corriente['Corriente L2'].iloc[0], 2),
                         'CORRIENTE_L2_MAX': round(df_Tabla_Calculos_Corriente['Corriente mx. L2'].iloc[0], 2),
-                        'CORRIENTE_L3_MIN': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[0], 2),
-                        'CORRIENTE_L3_MED': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[0], 2),
-                        'CORRIENTE_L3_MAX': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2)
+                        #'CORRIENTE_L3_MIN': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[0], 2),
+                        #'CORRIENTE_L3_MED': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[0], 2),
+                        #'CORRIENTE_L3_MAX': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2)
                     }
 
                     diccionario_Percentiles_CorrienteNeutra: dict = {
@@ -766,7 +768,7 @@ if 'correo_electronico' in st.session_state:
                     diccionario_Percentiles_THDV: dict = {
                         'THDV_DISTTENSION_L1': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L1'].iloc[0], 2),
                         'THDV_DISTTENSION_L2': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L2'].iloc[0], 2),
-                        'THDV_DISTTENSION_L3': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[0], 2)
+                        #'THDV_DISTTENSION_L3': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[0], 2)
                     }
 
                     valor_Referencia_THDV = var5
@@ -778,22 +780,22 @@ if 'correo_electronico' in st.session_state:
                     diccionario_Percentiles_Armonicos_3_9: dict = {
                         'ARMONICO_3_L1': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L1'].iloc[0], 2),
                         'ARMONICO_3_L2': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L2'].iloc[0], 2),
-                        'ARMONICO_3_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[0], 2),
+                        #'ARMONICO_3_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[0], 2),
                         'ARMONICO_5_L1': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L1'].iloc[0], 2),
                         'ARMONICO_5_L2': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L2'].iloc[0], 2),
-                        'ARMONICO_5_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[0], 2),
+                        #'ARMONICO_5_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[0], 2),
                         'ARMONICO_7_L1': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L1'].iloc[0], 2),
                         'ARMONICO_7_L2': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L2'].iloc[0], 2),
-                        'ARMONICO_7_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[0], 2),
+                        #'ARMONICO_7_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[0], 2),
                         'ARMONICO_9_L1': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L1'].iloc[0], 2),
                         'ARMONICO_9_L2': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L2'].iloc[0], 2),
-                        'ARMONICO_9_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[0], 2)
+                        #'ARMONICO_9_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[0], 2)
                     }
 
                     diccionario_Percentiles_Armonicos_11: dict = {
                         'ARMONICO_11_L1': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L1'].iloc[0], 2),
                         'ARMONICO_11_L2': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L2'].iloc[0], 2),
-                        'ARMONICO_11_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[0], 2)
+                        #'ARMONICO_11_L3': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[0], 2)
                     }
 
                     listado_Limites_Armonicos_Corriente: list = list(valores_Limites_Armonicos.values())[:2]
@@ -807,7 +809,7 @@ if 'correo_electronico' in st.session_state:
                     diccionario_Percentiles_TDD: dict = {
                         'TDD_PERCENTIL_L1': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L1'].iloc[0], 2),
                         'TDD_PERCENTIL_L2': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L2'].iloc[0], 2),
-                        'TDD_PERCENTIL_L3': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[0], 2)
+                        #'TDD_PERCENTIL_L3': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[0], 2)
                     }
 
                     valor_Referencia_TDD = valor_Limite_TDD
@@ -895,149 +897,149 @@ if 'correo_electronico' in st.session_state:
                         #'imagen_Linea_Tiempo_Flicker': img_Timeline_Flicker,
                         'imagen_Linea_Tiempo_FactorK': img_Timeline_FactorK,
                         'table_Data_Energy': table_Data_Energy_Info,
-                        'L12_MIN_PR': round(df_Tabla_Calculos_Tension['Tensin mn. L12'].iloc[0], 2),
-                        'L12_MED_PR': round(df_Tabla_Calculos_Tension['Tensin L12'].iloc[0], 2),
-                        'L12_MAX_PR': round(df_Tabla_Calculos_Tension['Tensin mx. L12'].iloc[0], 2),
-                        'L23_MIN_PR': round(df_Tabla_Calculos_Tension['Tensin mn. L23'].iloc[0], 2),
-                        'L23_MED_PR': round(df_Tabla_Calculos_Tension['Tensin L23'].iloc[0], 2),
-                        'L23_MAX_PR': round(df_Tabla_Calculos_Tension['Tensin mx. L23'].iloc[0], 2),
-                        'L31_MIN_PR': round(df_Tabla_Calculos_Tension['Tensin mn. L31'].iloc[0], 2),
-                        'L31_MED_PR': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[0], 2),
-                        'L31_MAX_PR': round(df_Tabla_Calculos_Tension['Tensin mx. L31'].iloc[0], 2),
+                        'L12_MIN_PR': round(df_Tabla_Calculos_Tension['Tensin mn. L1'].iloc[0], 2),
+                        'L12_MED_PR': round(df_Tabla_Calculos_Tension['Tensin L1'].iloc[0], 2),
+                        'L12_MAX_PR': round(df_Tabla_Calculos_Tension['Tensin mx. L1'].iloc[0], 2),
+                        'L23_MIN_PR': round(df_Tabla_Calculos_Tension['Tensin mn. L2'].iloc[0], 2),
+                        'L23_MED_PR': round(df_Tabla_Calculos_Tension['Tensin L2'].iloc[0], 2),
+                        'L23_MAX_PR': round(df_Tabla_Calculos_Tension['Tensin mx. L2'].iloc[0], 2),
+                        #'L31_MIN_PR': round(df_Tabla_Calculos_Tension['Tensin mn. L3'].iloc[0], 2),
+                        #'L31_MED_PR': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[0], 2),
+                        #'L31_MAX_PR': round(df_Tabla_Calculos_Tension['Tensin mx. L3'].iloc[0], 2),
                         'L1_CORR_MIN_PR': round(df_Tabla_Calculos_Corriente['Corriente mn. L1'].iloc[0], 2),
                         'L1_CORR_MED_PR': round(df_Tabla_Calculos_Corriente['Corriente L1'].iloc[0], 2),
                         'L1_CORR_MAX_PR': round(df_Tabla_Calculos_Corriente['Corriente mx. L1'].iloc[0], 2),
                         'L2_CORR_MIN_PR': round(df_Tabla_Calculos_Corriente['Corriente mn. L2'].iloc[0], 2),
                         'L2_CORR_MED_PR': round(df_Tabla_Calculos_Corriente['Corriente L2'].iloc[0], 2),
                         'L2_CORR_MAX_PR': round(df_Tabla_Calculos_Corriente['Corriente mx. L2'].iloc[0], 2),
-                        'L3_CORR_MIN_PR': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[0], 2),
-                        'L3_CORR_MED_PR': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[0], 2),
-                        'L3_CORR_MAX_PR': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2),
+                        #'L3_CORR_MIN_PR': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[0], 2),
+                        #'L3_CORR_MED_PR': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[0], 2),
+                        #'L3_CORR_MAX_PR': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[0], 2),
                         'LN_CORR_MIN_PR': round(df_Tabla_Calculos_Corriente['Corriente de neutro mn.'].iloc[0], 2),
                         'LN_CORR_MED_PR': round(df_Tabla_Calculos_Corriente['Corriente de neutro'].iloc[0], 2),
                         'LN_CORR_MAX_PR': round(df_Tabla_Calculos_Corriente['Corriente de neutro mx.'].iloc[0], 2),
-                        'L12_MIN_MX': round(df_Tabla_Calculos_Tension['Tensin mn. L12'].iloc[3], 2),
-                        'L12_MED_MX': round(df_Tabla_Calculos_Tension['Tensin L12'].iloc[3], 2),
-                        'L12_MAX_MX': round(df_Tabla_Calculos_Tension['Tensin mx. L12'].iloc[3], 2),
-                        'L23_MIN_MX': round(df_Tabla_Calculos_Tension['Tensin mn. L23'].iloc[3], 2),
-                        'L23_MED_MX': round(df_Tabla_Calculos_Tension['Tensin L23'].iloc[3], 2),
-                        'L23_MAX_MX': round(df_Tabla_Calculos_Tension['Tensin mx. L23'].iloc[3], 2),
-                        'L31_MIN_MX': round(df_Tabla_Calculos_Tension['Tensin mn. L31'].iloc[3], 2),
-                        'L31_MED_MX': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[3], 2),
-                        'L31_MAX_MX': round(df_Tabla_Calculos_Tension['Tensin mx. L31'].iloc[3], 2),
+                        'L12_MIN_MX': round(df_Tabla_Calculos_Tension['Tensin mn. L1'].iloc[3], 2),
+                        'L12_MED_MX': round(df_Tabla_Calculos_Tension['Tensin L1'].iloc[3], 2),
+                        'L12_MAX_MX': round(df_Tabla_Calculos_Tension['Tensin mx. L1'].iloc[3], 2),
+                        'L23_MIN_MX': round(df_Tabla_Calculos_Tension['Tensin mn. L2'].iloc[3], 2),
+                        'L23_MED_MX': round(df_Tabla_Calculos_Tension['Tensin L2'].iloc[3], 2),
+                        'L23_MAX_MX': round(df_Tabla_Calculos_Tension['Tensin mx. L2'].iloc[3], 2),
+                        #'L31_MIN_MX': round(df_Tabla_Calculos_Tension['Tensin mn. L3'].iloc[3], 2),
+                        #'L31_MED_MX': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[3], 2),
+                        #'L31_MAX_MX': round(df_Tabla_Calculos_Tension['Tensin mx. L3'].iloc[3], 2),
                         'L1_CORR_MIN_MX': round(df_Tabla_Calculos_Corriente['Corriente mn. L1'].iloc[3], 2),
                         'L1_CORR_MED_MX': round(df_Tabla_Calculos_Corriente['Corriente L1'].iloc[3], 2),
                         'L1_CORR_MAX_MX': round(df_Tabla_Calculos_Corriente['Corriente mx. L1'].iloc[3], 2),
                         'L2_CORR_MIN_MX': round(df_Tabla_Calculos_Corriente['Corriente mn. L2'].iloc[3], 2),
                         'L2_CORR_MED_MX': round(df_Tabla_Calculos_Corriente['Corriente L2'].iloc[3], 2),
                         'L2_CORR_MAX_MX': round(df_Tabla_Calculos_Corriente['Corriente mx. L2'].iloc[3], 2),
-                        'L3_CORR_MIN_MX': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[3], 2),
-                        'L3_CORR_MED_MX': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[3], 2),
-                        'L3_CORR_MAX_MX': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[3], 2),
+                        #'L3_CORR_MIN_MX': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[3], 2),
+                        #'L3_CORR_MED_MX': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[3], 2),
+                        #'L3_CORR_MAX_MX': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[3], 2),
                         'LN_CORR_MIN_MX': round(df_Tabla_Calculos_Corriente['Corriente de neutro mn.'].iloc[3], 2),
                         'LN_CORR_MED_MX': round(df_Tabla_Calculos_Corriente['Corriente de neutro'].iloc[3], 2),
                         'LN_CORR_MAX_MX': round(df_Tabla_Calculos_Corriente['Corriente de neutro mx.'].iloc[3], 2),
-                        'L12_MIN_PM': round(df_Tabla_Calculos_Tension['Tensin mn. L12'].iloc[1], 2),
-                        'L12_MED_PM': round(df_Tabla_Calculos_Tension['Tensin L12'].iloc[1], 2),
-                        'L12_MAX_PM': round(df_Tabla_Calculos_Tension['Tensin mx. L12'].iloc[1], 2),
-                        'L23_MIN_PM': round(df_Tabla_Calculos_Tension['Tensin mn. L23'].iloc[1], 2),
-                        'L23_MED_PM': round(df_Tabla_Calculos_Tension['Tensin L23'].iloc[1], 2),
-                        'L23_MAX_PM': round(df_Tabla_Calculos_Tension['Tensin mx. L23'].iloc[1], 2),
-                        'L31_MIN_PM': round(df_Tabla_Calculos_Tension['Tensin mn. L31'].iloc[1], 2),
-                        'L31_MED_PM': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[1], 2),
-                        'L31_MAX_PM': round(df_Tabla_Calculos_Tension['Tensin mx. L31'].iloc[1], 2),
+                        'L12_MIN_PM': round(df_Tabla_Calculos_Tension['Tensin mn. L1'].iloc[1], 2),
+                        'L12_MED_PM': round(df_Tabla_Calculos_Tension['Tensin L1'].iloc[1], 2),
+                        'L12_MAX_PM': round(df_Tabla_Calculos_Tension['Tensin mx. L1'].iloc[1], 2),
+                        'L23_MIN_PM': round(df_Tabla_Calculos_Tension['Tensin mn. L2'].iloc[1], 2),
+                        'L23_MED_PM': round(df_Tabla_Calculos_Tension['Tensin L2'].iloc[1], 2),
+                        'L23_MAX_PM': round(df_Tabla_Calculos_Tension['Tensin mx. L2'].iloc[1], 2),
+                        #'L31_MIN_PM': round(df_Tabla_Calculos_Tension['Tensin mn. L3'].iloc[1], 2),
+                        #'L31_MED_PM': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[1], 2),
+                        #'L31_MAX_PM': round(df_Tabla_Calculos_Tension['Tensin mx. L3'].iloc[1], 2),
                         'L1_CORR_MIN_PM': round(df_Tabla_Calculos_Corriente['Corriente mn. L1'].iloc[1], 2),
                         'L1_CORR_MED_PM': round(df_Tabla_Calculos_Corriente['Corriente L1'].iloc[1], 2),
                         'L1_CORR_MAX_PM': round(df_Tabla_Calculos_Corriente['Corriente mx. L1'].iloc[1], 2),
                         'L2_CORR_MIN_PM': round(df_Tabla_Calculos_Corriente['Corriente mn. L2'].iloc[1], 2),
                         'L2_CORR_MED_PM': round(df_Tabla_Calculos_Corriente['Corriente L2'].iloc[1], 2),
                         'L2_CORR_MAX_PM': round(df_Tabla_Calculos_Corriente['Corriente mx. L2'].iloc[1], 2),
-                        'L3_CORR_MIN_PM': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[1], 2),
-                        'L3_CORR_MED_PM': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[1], 2),
-                        'L3_CORR_MAX_PM': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[1], 2),
+                        #'L3_CORR_MIN_PM': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[1], 2),
+                        #'L3_CORR_MED_PM': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[1], 2),
+                        #'L3_CORR_MAX_PM': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[1], 2),
                         'LN_CORR_MIN_PM': round(df_Tabla_Calculos_Corriente['Corriente de neutro mn.'].iloc[1], 2),
                         'LN_CORR_MED_PM': round(df_Tabla_Calculos_Corriente['Corriente de neutro'].iloc[1], 2),
                         'LN_CORR_MAX_PM': round(df_Tabla_Calculos_Corriente['Corriente de neutro mx.'].iloc[1], 2),
-                        'L12_MIN_MN': round(df_Tabla_Calculos_Tension['Tensin mn. L12'].iloc[2], 2),
-                        'L12_MED_MN': round(df_Tabla_Calculos_Tension['Tensin L12'].iloc[2], 2),
-                        'L12_MAX_MN': round(df_Tabla_Calculos_Tension['Tensin mx. L12'].iloc[2], 2),
-                        'L23_MIN_MN': round(df_Tabla_Calculos_Tension['Tensin mn. L23'].iloc[2], 2),
-                        'L23_MED_MN': round(df_Tabla_Calculos_Tension['Tensin L23'].iloc[2], 2),
-                        'L23_MAX_MN': round(df_Tabla_Calculos_Tension['Tensin mx. L23'].iloc[2], 2),
-                        'L31_MIN_MN': round(df_Tabla_Calculos_Tension['Tensin mn. L31'].iloc[2], 2),
-                        'L31_MED_MN': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[2], 2),
-                        'L31_MAX_MN': round(df_Tabla_Calculos_Tension['Tensin mx. L31'].iloc[2], 2),
+                        'L12_MIN_MN': round(df_Tabla_Calculos_Tension['Tensin mn. L1'].iloc[2], 2),
+                        'L12_MED_MN': round(df_Tabla_Calculos_Tension['Tensin L1'].iloc[2], 2),
+                        'L12_MAX_MN': round(df_Tabla_Calculos_Tension['Tensin mx. L1'].iloc[2], 2),
+                        'L23_MIN_MN': round(df_Tabla_Calculos_Tension['Tensin mn. L2'].iloc[2], 2),
+                        'L23_MED_MN': round(df_Tabla_Calculos_Tension['Tensin L2'].iloc[2], 2),
+                        'L23_MAX_MN': round(df_Tabla_Calculos_Tension['Tensin mx. L2'].iloc[2], 2),
+                        #'L31_MIN_MN': round(df_Tabla_Calculos_Tension['Tensin mn. L3'].iloc[2], 2),
+                        #'L31_MED_MN': round(df_Tabla_Calculos_Tension['Tensin L31'].iloc[2], 2),
+                        #'L31_MAX_MN': round(df_Tabla_Calculos_Tension['Tensin mx. L3'].iloc[2], 2),
                         'L1_CORR_MIN_MN': round(df_Tabla_Calculos_Corriente['Corriente mn. L1'].iloc[2], 2),
                         'L1_CORR_MED_MN': round(df_Tabla_Calculos_Corriente['Corriente L1'].iloc[2], 2),
                         'L1_CORR_MAX_MN': round(df_Tabla_Calculos_Corriente['Corriente mx. L1'].iloc[2], 2),
                         'L2_CORR_MIN_MN': round(df_Tabla_Calculos_Corriente['Corriente mn. L2'].iloc[2], 2),
                         'L2_CORR_MED_MN': round(df_Tabla_Calculos_Corriente['Corriente L2'].iloc[2], 2),
                         'L2_CORR_MAX_MN': round(df_Tabla_Calculos_Corriente['Corriente mx. L2'].iloc[2], 2),
-                        'L3_CORR_MIN_MN': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[2], 2),
-                        'L3_CORR_MED_MN': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[2], 2),
-                        'L3_CORR_MAX_MN': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[2], 2),
+                        #'L3_CORR_MIN_MN': round(df_Tabla_Calculos_Corriente['Corriente mn. L3'].iloc[2], 2),
+                        #'L3_CORR_MED_MN': round(df_Tabla_Calculos_Corriente['Corriente L3'].iloc[2], 2),
+                        #'L3_CORR_MAX_MN': round(df_Tabla_Calculos_Corriente['Corriente mx. L3'].iloc[2], 2),
                         'LN_CORR_MIN_MN': round(df_Tabla_Calculos_Corriente['Corriente de neutro mn.'].iloc[2], 2),
                         'LN_CORR_MED_MN': round(df_Tabla_Calculos_Corriente['Corriente de neutro'].iloc[2], 2),
                         'LN_CORR_MAX_MN': round(df_Tabla_Calculos_Corriente['Corriente de neutro mx.'].iloc[2], 2),
-                        'val_Pct_Max_VL1': round(var_Lista_Variaciones[3], 2),
-                        'val_Pct_Max_VL2': round(var_Lista_Variaciones[4], 2),
-                        'val_Pct_Max_VL3': round(var_Lista_Variaciones[5], 2),
+                        'val_Pct_Max_VL1': round(var_Lista_Variaciones[2], 2),
+                        'val_Pct_Max_VL2': round(var_Lista_Variaciones[3], 2),
+                        #'val_Pct_Max_VL3': round(var_Lista_Variaciones[5], 2),
                         'val_Pct_Min_VL1': round(var_Lista_Variaciones[0], 2),
                         'val_Pct_Min_VL2': round(var_Lista_Variaciones[1], 2),
-                        'val_Pct_Min_VL3': round(var_Lista_Variaciones[2], 2),
-                        'V1_DESBTEN_MED_PR': round(df_Tabla_Calculos_Desb_Tension['Tensin L12'].iloc[0], 2),
-                        'V2_DESBTEN_MED_PR': round(df_Tabla_Calculos_Desb_Tension['Tensin L23'].iloc[0], 2),
-                        'V3_DESBTEN_MED_PR': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[0], 2),
+                        #'val_Pct_Min_VL3': round(var_Lista_Variaciones[2], 2),
+                        'V1_DESBTEN_MED_PR': round(df_Tabla_Calculos_Desb_Tension['Tensin L1'].iloc[0], 2),
+                        'V2_DESBTEN_MED_PR': round(df_Tabla_Calculos_Desb_Tension['Tensin L2'].iloc[0], 2),
+                        #'V3_DESBTEN_MED_PR': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[0], 2),
                         'DESBTEN_PROMEDIO_PR': round(df_Tabla_Calculos_Desb_Tension['Promedio'].iloc[0], 2),
                         'V1_DESBTEN_DELTA_PR': round(df_Tabla_Calculos_Desb_Tension['delta_V1'].iloc[0], 2),
                         'V2_DESBTEN_DELTA_PR': round(df_Tabla_Calculos_Desb_Tension['delta_V2'].iloc[0], 2),
-                        'V3_DESBTEN_DELTA_PR': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[0], 2),
+                        #'V3_DESBTEN_DELTA_PR': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[0], 2),
                         'VALUE_DESBTEN_PR': round(df_Tabla_Calculos_Desb_Tension['Desbalance'].iloc[0], 2),
-                        'V1_DESBTEN_MED_MX': round(df_Tabla_Calculos_Desb_Tension['Tensin L12'].iloc[3], 2),
-                        'V2_DESBTEN_MED_MX': round(df_Tabla_Calculos_Desb_Tension['Tensin L23'].iloc[3], 2),
-                        'V3_DESBTEN_MED_MX': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[3], 2),
+                        'V1_DESBTEN_MED_MX': round(df_Tabla_Calculos_Desb_Tension['Tensin L1'].iloc[3], 2),
+                        'V2_DESBTEN_MED_MX': round(df_Tabla_Calculos_Desb_Tension['Tensin L2'].iloc[3], 2),
+                        #'V3_DESBTEN_MED_MX': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[3], 2),
                         'DESBTEN_PROMEDIO_MX': round(df_Tabla_Calculos_Desb_Tension['Promedio'].iloc[3], 2),
                         'V1_DESBTEN_DELTA_MX': round(df_Tabla_Calculos_Desb_Tension['delta_V1'].iloc[3], 2),
                         'V2_DESBTEN_DELTA_MX': round(df_Tabla_Calculos_Desb_Tension['delta_V2'].iloc[3], 2),
-                        'V3_DESBTEN_DELTA_MX': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[3], 2),
+                        #'V3_DESBTEN_DELTA_MX': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[3], 2),
                         'VALUE_DESBTEN_MX': round(df_Tabla_Calculos_Desb_Tension['Desbalance'].iloc[3], 2),
-                        'V1_DESBTEN_MED_PM': round(df_Tabla_Calculos_Desb_Tension['Tensin L12'].iloc[1], 2),
-                        'V2_DESBTEN_MED_PM': round(df_Tabla_Calculos_Desb_Tension['Tensin L23'].iloc[1], 2),
-                        'V3_DESBTEN_MED_PM': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[1], 2),
+                        'V1_DESBTEN_MED_PM': round(df_Tabla_Calculos_Desb_Tension['Tensin L1'].iloc[1], 2),
+                        'V2_DESBTEN_MED_PM': round(df_Tabla_Calculos_Desb_Tension['Tensin L2'].iloc[1], 2),
+                        #'V3_DESBTEN_MED_PM': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[1], 2),
                         'DESBTEN_PROMEDIO_PM': round(df_Tabla_Calculos_Desb_Tension['Promedio'].iloc[1], 2),
                         'V1_DESBTEN_DELTA_PM': round(df_Tabla_Calculos_Desb_Tension['delta_V1'].iloc[1], 2),
                         'V2_DESBTEN_DELTA_PM': round(df_Tabla_Calculos_Desb_Tension['delta_V2'].iloc[1], 2),
-                        'V3_DESBTEN_DELTA_PM': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[1], 2),
+                        #'V3_DESBTEN_DELTA_PM': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[1], 2),
                         'VALUE_DESBTEN_PM': round(df_Tabla_Calculos_Desb_Tension['Desbalance'].iloc[1], 2),
-                        'V1_DESBTEN_MED_MN': round(df_Tabla_Calculos_Desb_Tension['Tensin L12'].iloc[2], 2),
-                        'V2_DESBTEN_MED_MN': round(df_Tabla_Calculos_Desb_Tension['Tensin L23'].iloc[2], 2),
-                        'V3_DESBTEN_MED_MN': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[2], 2),
+                        'V1_DESBTEN_MED_MN': round(df_Tabla_Calculos_Desb_Tension['Tensin L1'].iloc[2], 2),
+                        'V2_DESBTEN_MED_MN': round(df_Tabla_Calculos_Desb_Tension['Tensin L2'].iloc[2], 2),
+                        #'V3_DESBTEN_MED_MN': round(df_Tabla_Calculos_Desb_Tension['Tensin L31'].iloc[2], 2),
                         'DESBTEN_PROMEDIO_MN': round(df_Tabla_Calculos_Desb_Tension['Promedio'].iloc[2], 2),
                         'V1_DESBTEN_DELTA_MN': round(df_Tabla_Calculos_Desb_Tension['delta_V1'].iloc[2], 2),
                         'V2_DESBTEN_DELTA_MN': round(df_Tabla_Calculos_Desb_Tension['delta_V2'].iloc[2], 2),
-                        'V3_DESBTEN_DELTA_MN': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[2], 2),
+                        #'V3_DESBTEN_DELTA_MN': round(df_Tabla_Calculos_Desb_Tension['delta_V3'].iloc[2], 2),
                         'VALUE_DESBTEN_MN': round(df_Tabla_Calculos_Desb_Tension['Desbalance'].iloc[2], 2),
                         'V1_DESBCORR_MED_PR': round(df_Tabla_Calculos_Desb_Corriente['Corriente L1'].iloc[0], 2),
                         'V2_DESBCORR_MED_PR': round(df_Tabla_Calculos_Desb_Corriente['Corriente L2'].iloc[0], 2),
-                        'V3_DESBCORR_MED_PR': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[0], 2),
+                        #'V3_DESBCORR_MED_PR': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[0], 2),
                         'DESBCORR_PROMEDIO_PR': round(df_Tabla_Calculos_Desb_Corriente['Promedio'].iloc[0], 2),
                         'DESBCORR_MAXMED_PR': round(df_Tabla_Calculos_Desb_Corriente['max_Corrientes_Medias'].iloc[0], 2),
                         'VALUE_DESBCORR_PR': round(df_Tabla_Calculos_Desb_Corriente['Desbalance'].iloc[0], 2),
                         'V1_DESBCORR_MED_MX': round(df_Tabla_Calculos_Desb_Corriente['Corriente L1'].iloc[3], 2),
                         'V2_DESBCORR_MED_MX': round(df_Tabla_Calculos_Desb_Corriente['Corriente L2'].iloc[3], 2),
-                        'V3_DESBCORR_MED_MX': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[3], 2),
+                        #'V3_DESBCORR_MED_MX': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[3], 2),
                         'DESBCORR_PROMEDIO_MX': round(df_Tabla_Calculos_Desb_Corriente['Promedio'].iloc[3], 2),
                         'DESBCORR_MAXMED_MX': round(df_Tabla_Calculos_Desb_Corriente['max_Corrientes_Medias'].iloc[3], 2),
                         'VALUE_DESBCORR_MX': round(df_Tabla_Calculos_Desb_Corriente['Desbalance'].iloc[3], 2),
                         'V1_DESBCORR_MED_PM': round(df_Tabla_Calculos_Desb_Corriente['Corriente L1'].iloc[1], 2),
                         'V2_DESBCORR_MED_PM': round(df_Tabla_Calculos_Desb_Corriente['Corriente L2'].iloc[1], 2),
-                        'V3_DESBCORR_MED_PM': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[1], 2),
+                        #'V3_DESBCORR_MED_PM': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[1], 2),
                         'DESBCORR_PROMEDIO_PM': round(df_Tabla_Calculos_Desb_Corriente['Promedio'].iloc[1], 2),
                         'DESBCORR_MAXMED_PM': round(df_Tabla_Calculos_Desb_Corriente['max_Corrientes_Medias'].iloc[1], 2),
                         'VALUE_DESBCORR_PM': round(df_Tabla_Calculos_Desb_Corriente['Desbalance'].iloc[1], 2),
                         'V1_DESBCORR_MED_MN': round(df_Tabla_Calculos_Desb_Corriente['Corriente L1'].iloc[2], 2),
                         'V2_DESBCORR_MED_MN': round(df_Tabla_Calculos_Desb_Corriente['Corriente L2'].iloc[2], 2),
-                        'V3_DESBCORR_MED_MN': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[2], 2),
+                        #'V3_DESBCORR_MED_MN': round(df_Tabla_Calculos_Desb_Corriente['Corriente L3'].iloc[2], 2),
                         'DESBCORR_PROMEDIO_MN': round(df_Tabla_Calculos_Desb_Corriente['Promedio'].iloc[2], 2),
                         'DESBCORR_MAXMED_MN': round(df_Tabla_Calculos_Desb_Corriente['max_Corrientes_Medias'].iloc[2], 2),
                         'VALUE_DESBCORR_MN': round(df_Tabla_Calculos_Desb_Corriente['Desbalance'].iloc[2], 2),
@@ -1175,19 +1177,19 @@ if 'correo_electronico' in st.session_state:
                         'EN_FACT_POTENCIA_POS_MN': round(df_Tabla_Calculos_Energias['F.P. III'].iloc[2], 2),
                         'THD_DIST_TENSION_L1_MAX_PR': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L1'].iloc[0], 2),
                         'THD_DIST_TENSION_L2_MAX_PR': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L2'].iloc[0], 2),
-                        'THD_DIST_TENSION_L3_MAX_PR': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[0], 2),
+                        #'THD_DIST_TENSION_L3_MAX_PR': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[0], 2),
                         'THD_DIST_TENSION_DIST_ARM_PR': round(df_Tabla_Calculos_DistTension['var_Ref_Distorsion_Tension'].iloc[0], 2),
                         'THD_DIST_TENSION_L1_MAX_MX': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L1'].iloc[3], 2),
                         'THD_DIST_TENSION_L2_MAX_MX': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L2'].iloc[3], 2),
-                        'THD_DIST_TENSION_L3_MAX_MX': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[3], 2),
+                        #'THD_DIST_TENSION_L3_MAX_MX': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[3], 2),
                         'THD_DIST_TENSION_DIST_ARM_MX': round(df_Tabla_Calculos_DistTension['var_Ref_Distorsion_Tension'].iloc[3], 2),
                         'THD_DIST_TENSION_L1_MAX_PM': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L1'].iloc[1], 2),
                         'THD_DIST_TENSION_L2_MAX_PM': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L2'].iloc[1], 2),
-                        'THD_DIST_TENSION_L3_MAX_PM': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[1], 2),
+                        #'THD_DIST_TENSION_L3_MAX_PM': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[1], 2),
                         'THD_DIST_TENSION_DIST_ARM_PM': round(df_Tabla_Calculos_DistTension['var_Ref_Distorsion_Tension'].iloc[1], 2),
                         'THD_DIST_TENSION_L1_MAX_MN': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L1'].iloc[2], 2),
                         'THD_DIST_TENSION_L2_MAX_MN': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L2'].iloc[2], 2),
-                        'THD_DIST_TENSION_L3_MAX_MN': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[2], 2),
+                        #'THD_DIST_TENSION_L3_MAX_MN': round(df_Tabla_Calculos_DistTension['V THD/d Mx. L3'].iloc[2], 2),
                         'THD_DIST_TENSION_DIST_ARM_MN': round(df_Tabla_Calculos_DistTension['var_Ref_Distorsion_Tension'].iloc[2], 2),
                         'THDV_ARM_N3_L1_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L1'].iloc[0], 2),
                         'THDV_ARM_N5_L1_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L1'].iloc[0], 2),
@@ -1245,46 +1247,46 @@ if 'correo_electronico' in st.session_state:
                         'THDV_ARM_N11_L2_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L2'].iloc[2], 2),
                         'THDV_ARM_N13_L2_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L2'].iloc[2], 2),
                         'THDV_ARM_N15_L2_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L2'].iloc[2], 2),
-                        'THDV_ARM_N3_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[0], 2),
-                        'THDV_ARM_N5_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[0], 2),
-                        'THDV_ARM_N7_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[0], 2),
-                        'THDV_ARM_N9_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[0], 2),
-                        'THDV_ARM_N11_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[0], 2),
-                        'THDV_ARM_N13_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[0], 2),
-                        'THDV_ARM_N15_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[0], 2),
-                        'THDV_ARM_N3_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[3], 2),
-                        'THDV_ARM_N5_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[3], 2),
-                        'THDV_ARM_N7_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[3], 2),
-                        'THDV_ARM_N9_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[3], 2),
-                        'THDV_ARM_N11_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[3], 2),
-                        'THDV_ARM_N13_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[3], 2),
-                        'THDV_ARM_N15_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[3], 2),
-                        'THDV_ARM_N3_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[1], 2),
-                        'THDV_ARM_N5_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[1], 2),
-                        'THDV_ARM_N7_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[1], 2),
-                        'THDV_ARM_N9_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[1], 2),
-                        'THDV_ARM_N11_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[1], 2),
-                        'THDV_ARM_N13_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[1], 2),
-                        'THDV_ARM_N15_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[1], 2),
-                        'THDV_ARM_N3_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[2], 2),
-                        'THDV_ARM_N5_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[2], 2),
-                        'THDV_ARM_N7_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[2], 2),
-                        'THDV_ARM_N9_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[2], 2),
-                        'THDV_ARM_N11_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[2], 2),
-                        'THDV_ARM_N13_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[2], 2),
-                        'THDV_ARM_N15_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[2], 2),
+                        #'THDV_ARM_N3_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[0], 2),
+                        #'THDV_ARM_N5_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[0], 2),
+                        #'THDV_ARM_N7_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[0], 2),
+                        #'THDV_ARM_N9_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[0], 2),
+                        #'THDV_ARM_N11_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[0], 2),
+                        #'THDV_ARM_N13_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[0], 2),
+                        #'THDV_ARM_N15_L3_PR': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[0], 2),
+                        #'THDV_ARM_N3_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[3], 2),
+                        #'THDV_ARM_N5_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[3], 2),
+                        #'THDV_ARM_N7_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[3], 2),
+                        #'THDV_ARM_N9_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[3], 2),
+                        #'THDV_ARM_N11_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[3], 2),
+                        #'THDV_ARM_N13_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[3], 2),
+                        #'THDV_ARM_N15_L3_MX': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[3], 2),
+                        #'THDV_ARM_N3_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[1], 2),
+                        #'THDV_ARM_N5_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[1], 2),
+                        #'THDV_ARM_N7_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[1], 2),
+                        #'THDV_ARM_N9_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[1], 2),
+                        #'THDV_ARM_N11_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[1], 2),
+                        #'THDV_ARM_N13_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[1], 2),
+                        #'THDV_ARM_N15_L3_PM': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[1], 2),
+                        #'THDV_ARM_N3_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 3 L3'].iloc[2], 2),
+                        #'THDV_ARM_N5_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 5 L3'].iloc[2], 2),
+                        #'THDV_ARM_N7_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 7 L3'].iloc[2], 2),
+                        #'THDV_ARM_N9_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 9 L3'].iloc[2], 2),
+                        #'THDV_ARM_N11_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 11 L3'].iloc[2], 2),
+                        #'THDV_ARM_N13_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 13 L3'].iloc[2], 2),
+                        #'THDV_ARM_N15_L3_MN': round(df_Tabla_Calculos_Armonicos_DistTension['Arm. tensin 15 L3'].iloc[2], 2),
                         'THD_DIST_CORRIENTE_L1_MED_PR': round(df_Tabla_Calculos_DistCorriente['A THD/d L1'].iloc[0], 2),
                         'THD_DIST_CORRIENTE_L2_MED_PR': round(df_Tabla_Calculos_DistCorriente['A THD/d L2'].iloc[0], 2),
-                        'THD_DIST_CORRIENTE_L3_MED_PR': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[0], 2),
+                        #'THD_DIST_CORRIENTE_L3_MED_PR': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[0], 2),
                         'THD_DIST_CORRIENTE_L1_MED_MX': round(df_Tabla_Calculos_DistCorriente['A THD/d L1'].iloc[3], 2),
                         'THD_DIST_CORRIENTE_L2_MED_MX': round(df_Tabla_Calculos_DistCorriente['A THD/d L2'].iloc[3], 2),
-                        'THD_DIST_CORRIENTE_L3_MED_MX': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[3], 2),
+                        #'THD_DIST_CORRIENTE_L3_MED_MX': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[3], 2),
                         'THD_DIST_CORRIENTE_L1_MED_PM': round(df_Tabla_Calculos_DistCorriente['A THD/d L1'].iloc[1], 2),
                         'THD_DIST_CORRIENTE_L2_MED_PM': round(df_Tabla_Calculos_DistCorriente['A THD/d L2'].iloc[1], 2),
-                        'THD_DIST_CORRIENTE_L3_MED_PM': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[1], 2),
+                        #'THD_DIST_CORRIENTE_L3_MED_PM': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[1], 2),
                         'THD_DIST_CORRIENTE_L1_MED_MN': round(df_Tabla_Calculos_DistCorriente['A THD/d L1'].iloc[2], 2),
                         'THD_DIST_CORRIENTE_L2_MED_MN': round(df_Tabla_Calculos_DistCorriente['A THD/d L2'].iloc[2], 2),
-                        'THD_DIST_CORRIENTE_L3_MED_MN': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[2], 2),
+                        #'THD_DIST_CORRIENTE_L3_MED_MN': round(df_Tabla_Calculos_DistCorriente['A THD/d L3'].iloc[2], 2),
                         'DHIT_ARM_N3_L1_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L1'].iloc[0], 2),
                         'DHIT_ARM_N5_L1_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L1'].iloc[0], 2),
                         'DHIT_ARM_N7_L1_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L1'].iloc[0], 2),
@@ -1341,46 +1343,46 @@ if 'correo_electronico' in st.session_state:
                         'DHIT_ARM_N11_L2_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L2'].iloc[2], 2),
                         'DHIT_ARM_N13_L2_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L2'].iloc[2], 2),
                         'DHIT_ARM_N15_L2_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L2'].iloc[2], 2),
-                        'DHIT_ARM_N3_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[0], 2),
-                        'DHIT_ARM_N5_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[0], 2),
-                        'DHIT_ARM_N7_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[0], 2),
-                        'DHIT_ARM_N9_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[0], 2),
-                        'DHIT_ARM_N11_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[0], 2),
-                        'DHIT_ARM_N13_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[0], 2),
-                        'DHIT_ARM_N15_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[0], 2),
-                        'DHIT_ARM_N3_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[3], 2),
-                        'DHIT_ARM_N5_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[3], 2),
-                        'DHIT_ARM_N7_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[3], 2),
-                        'DHIT_ARM_N9_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[3], 2),
-                        'DHIT_ARM_N11_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[3], 2),
-                        'DHIT_ARM_N13_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[3], 2),
-                        'DHIT_ARM_N15_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[3], 2),
-                        'DHIT_ARM_N3_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[1], 2),
-                        'DHIT_ARM_N5_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[1], 2),
-                        'DHIT_ARM_N7_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[1], 2),
-                        'DHIT_ARM_N9_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[1], 2),
-                        'DHIT_ARM_N11_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[1], 2),
-                        'DHIT_ARM_N13_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[1], 2),
-                        'DHIT_ARM_N15_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[1], 2),
-                        'DHIT_ARM_N3_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[2], 2),
-                        'DHIT_ARM_N5_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[2], 2),
-                        'DHIT_ARM_N7_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[2], 2),
-                        'DHIT_ARM_N9_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[2], 2),
-                        'DHIT_ARM_N11_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[2], 2),
-                        'DHIT_ARM_N13_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[2], 2),
-                        'DHIT_ARM_N15_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[2], 2),
+                        #'DHIT_ARM_N3_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[0], 2),
+                        #'DHIT_ARM_N5_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[0], 2),
+                        #'DHIT_ARM_N7_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[0], 2),
+                        #'DHIT_ARM_N9_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[0], 2),
+                        #'DHIT_ARM_N11_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[0], 2),
+                        #'DHIT_ARM_N13_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[0], 2),
+                        #'DHIT_ARM_N15_L3_PR': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[0], 2),
+                        #'DHIT_ARM_N3_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[3], 2),
+                        #'DHIT_ARM_N5_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[3], 2),
+                        #'DHIT_ARM_N7_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[3], 2),
+                        #'DHIT_ARM_N9_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[3], 2),
+                        #'DHIT_ARM_N11_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[3], 2),
+                        #'DHIT_ARM_N13_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[3], 2),
+                        #'DHIT_ARM_N15_L3_MX': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[3], 2),
+                        #'DHIT_ARM_N3_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[1], 2),
+                        #'DHIT_ARM_N5_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[1], 2),
+                        #'DHIT_ARM_N7_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[1], 2),
+                        #'DHIT_ARM_N9_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[1], 2),
+                        #'DHIT_ARM_N11_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[1], 2),
+                        #'DHIT_ARM_N13_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[1], 2),
+                        #'DHIT_ARM_N15_L3_PM': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[1], 2),
+                        #'DHIT_ARM_N3_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 3 L3'].iloc[2], 2),
+                        #'DHIT_ARM_N5_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 5 L3'].iloc[2], 2),
+                        #'DHIT_ARM_N7_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 7 L3'].iloc[2], 2),
+                        #'DHIT_ARM_N9_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 9 L3'].iloc[2], 2),
+                        #'DHIT_ARM_N11_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 11 L3'].iloc[2], 2),
+                        #'DHIT_ARM_N13_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 13 L3'].iloc[2], 2),
+                        #'DHIT_ARM_N15_L3_MN': round(df_Tabla_Calculos_Armonicos_DistCorriente['Arm. corriente 15 L3'].iloc[2], 2),
                         'TDD_LINEA_1_PR': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L1'].iloc[0], 2),
                         'TDD_LINEA_2_PR': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L2'].iloc[0], 2),
-                        'TDD_LINEA_3_PR': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[0], 2),
+                        #'TDD_LINEA_3_PR': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[0], 2),
                         'TDD_LINEA_1_MX': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L1'].iloc[3], 2),
                         'TDD_LINEA_2_MX': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L2'].iloc[3], 2),
-                        'TDD_LINEA_3_MX': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[3], 2),
+                        #'TDD_LINEA_3_MX': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[3], 2),
                         'TDD_LINEA_1_PM': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L1'].iloc[1], 2),
                         'TDD_LINEA_2_PM': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L2'].iloc[1], 2),
-                        'TDD_LINEA_3_PM': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[1], 2),
+                        #'TDD_LINEA_3_PM': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[1], 2),
                         'TDD_LINEA_1_MN': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L1'].iloc[2], 2),
                         'TDD_LINEA_2_MN': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L2'].iloc[2], 2),
-                        'TDD_LINEA_3_MN': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[2], 2),
+                        #'TDD_LINEA_3_MN': round(df_Tabla_Calculos_CargabilidadTDD['resultado_TDD_L3'].iloc[2], 2),
                         #'PLT_FLICKER_L1_MED_PR': round(df_Tabla_Calculos_Flicker['Plt L1'].iloc[0], 2),
                         #'PLT_FLICKER_L2_MED_PR': round(df_Tabla_Calculos_Flicker['Plt L2'].iloc[0], 2),
                         #'PLT_FLICKER_L3_MED_PR': round(df_Tabla_Calculos_Flicker['Plt L3'].iloc[0], 2),
@@ -1395,40 +1397,40 @@ if 'correo_electronico' in st.session_state:
                         #'PLT_FLICKER_L3_MED_MN': round(df_Tabla_Calculos_Flicker['Plt L3'].iloc[2], 2),
                         'FACTOR_K_L1_MIN_PR': round(df_Tabla_Calculos_FactorK['Factor K mn. L1'].iloc[0], 2),
                         'FACTOR_K_L2_MIN_PR': round(df_Tabla_Calculos_FactorK['Factor K mn. L2'].iloc[0], 2),
-                        'FACTOR_K_L3_MIN_PR': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[0], 2),
+                        #'FACTOR_K_L3_MIN_PR': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[0], 2),
                         'FACTOR_K_L1_MED_PR': round(df_Tabla_Calculos_FactorK['Factor K L1'].iloc[0], 2),
                         'FACTOR_K_L2_MED_PR': round(df_Tabla_Calculos_FactorK['Factor K L2'].iloc[0], 2),
-                        'FACTOR_K_L3_MED_PR': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[0], 2),
+                        #'FACTOR_K_L3_MED_PR': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[0], 2),
                         'FACTOR_K_L1_MAX_PR': round(df_Tabla_Calculos_FactorK['Factor K mx. L1'].iloc[0], 2),
                         'FACTOR_K_L2_MAX_PR': round(df_Tabla_Calculos_FactorK['Factor K mx. L2'].iloc[0], 2),
-                        'FACTOR_K_L3_MAX_PR': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[0], 2),
+                        #'FACTOR_K_L3_MAX_PR': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[0], 2),
                         'FACTOR_K_L1_MIN_MX': round(df_Tabla_Calculos_FactorK['Factor K mn. L1'].iloc[3], 2),
                         'FACTOR_K_L2_MIN_MX': round(df_Tabla_Calculos_FactorK['Factor K mn. L2'].iloc[3], 2),
-                        'FACTOR_K_L3_MIN_MX': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[3], 2),
+                        #'FACTOR_K_L3_MIN_MX': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[3], 2),
                         'FACTOR_K_L1_MED_MX': round(df_Tabla_Calculos_FactorK['Factor K L1'].iloc[3], 2),
                         'FACTOR_K_L2_MED_MX': round(df_Tabla_Calculos_FactorK['Factor K L2'].iloc[3], 2),
-                        'FACTOR_K_L3_MED_MX': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[3], 2),
+                        #'FACTOR_K_L3_MED_MX': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[3], 2),
                         'FACTOR_K_L1_MAX_MX': round(df_Tabla_Calculos_FactorK['Factor K mx. L1'].iloc[3], 2),
                         'FACTOR_K_L2_MAX_MX': round(df_Tabla_Calculos_FactorK['Factor K mx. L2'].iloc[3], 2),
-                        'FACTOR_K_L3_MAX_MX': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[3], 2),
+                        #'FACTOR_K_L3_MAX_MX': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[3], 2),
                         'FACTOR_K_L1_MIN_PM': round(df_Tabla_Calculos_FactorK['Factor K mn. L1'].iloc[1], 2),
                         'FACTOR_K_L2_MIN_PM': round(df_Tabla_Calculos_FactorK['Factor K mn. L2'].iloc[1], 2),
-                        'FACTOR_K_L3_MIN_PM': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[1], 2),
+                        #'FACTOR_K_L3_MIN_PM': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[1], 2),
                         'FACTOR_K_L1_MED_PM': round(df_Tabla_Calculos_FactorK['Factor K L1'].iloc[1], 2),
                         'FACTOR_K_L2_MED_PM': round(df_Tabla_Calculos_FactorK['Factor K L2'].iloc[1], 2),
-                        'FACTOR_K_L3_MED_PM': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[1], 2),
+                        #'FACTOR_K_L3_MED_PM': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[1], 2),
                         'FACTOR_K_L1_MAX_PM': round(df_Tabla_Calculos_FactorK['Factor K mx. L1'].iloc[1], 2),
                         'FACTOR_K_L2_MAX_PM': round(df_Tabla_Calculos_FactorK['Factor K mx. L2'].iloc[1], 2),
-                        'FACTOR_K_L3_MAX_PM': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[1], 2),
+                        #'FACTOR_K_L3_MAX_PM': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[1], 2),
                         'FACTOR_K_L1_MIN_MN': round(df_Tabla_Calculos_FactorK['Factor K mn. L1'].iloc[2], 2),
                         'FACTOR_K_L2_MIN_MN': round(df_Tabla_Calculos_FactorK['Factor K mn. L2'].iloc[2], 2),
-                        'FACTOR_K_L3_MIN_MN': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[2], 2),
+                        #'FACTOR_K_L3_MIN_MN': round(df_Tabla_Calculos_FactorK['Factor K mn. L3'].iloc[2], 2),
                         'FACTOR_K_L1_MED_MN': round(df_Tabla_Calculos_FactorK['Factor K L1'].iloc[2], 2),
                         'FACTOR_K_L2_MED_MN': round(df_Tabla_Calculos_FactorK['Factor K L2'].iloc[2], 2),
-                        'FACTOR_K_L3_MED_MN': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[2], 2),
+                        #'FACTOR_K_L3_MED_MN': round(df_Tabla_Calculos_FactorK['Factor K L3'].iloc[2], 2),
                         'FACTOR_K_L1_MAX_MN': round(df_Tabla_Calculos_FactorK['Factor K mx. L1'].iloc[2], 2),
                         'FACTOR_K_L2_MAX_MN': round(df_Tabla_Calculos_FactorK['Factor K mx. L2'].iloc[2], 2),
-                        'FACTOR_K_L3_MAX_MN': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[2], 2),
+                        #'FACTOR_K_L3_MAX_MN': round(df_Tabla_Calculos_FactorK['Factor K mx. L3'].iloc[2], 2),
                         'var_valor_Maximo_Corrientes_Max': round(valor_Maximo_Corrientes, 2),
                         'var_valor_Corriente_Cortacircuito': round(valor_Corriente_Cortacircuito, 2),
                         'var_valor_ISC_sobre_IL': round(valor_ISC_sobre_IL, 2),

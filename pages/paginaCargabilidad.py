@@ -113,12 +113,12 @@ if 'correo_electronico' in st.session_state:
                     if plantillaSeleccionada == "Vatia":
                         
                         print("a")
-                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/365a61d9e72f3e175c39d5fa6cb1c189e0c70ffa/vars_Template_ETV_Circuitor_VATIA.docx?raw=true"
+                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/f3f44250a3b53581fb6d788e6f9717d4ac374b87/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
                     
                     elif plantillaSeleccionada == "GIGA":
                         
                         print("a")
-                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/365a61d9e72f3e175c39d5fa6cb1c189e0c70ffa/vars_Template_ETV_Circuitor.docx?raw=true"
+                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/f3f44250a3b53581fb6d788e6f9717d4ac374b87/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
                     
                     else:
                         
@@ -1091,6 +1091,8 @@ if 'correo_electronico' in st.session_state:
                         'PQS_POT_APA_MAX_MN': round(df_Tabla_Calculos_PQS_Potencias['P.Aparente mx. III'].iloc[2], 2),
                         'PQS_CARGABILIDAD_MAX': round(var_Lista_PQS_Carg_Disp[0], 2),
                         'DISPONIBILIDAD_CARGA': round(var_Lista_PQS_Carg_Disp[1], 2),
+                        'PQS_CARGABILIDAD_MAX_KVA': round(((var_Lista_PQS_Carg_Disp[0]*var2)/100), 2),
+                        'DISPONIBILIDAD_CARGA_KVA': round(((var_Lista_PQS_Carg_Disp[1]*var2)/100), 2),
                         'FP_POT_CAP_MIN_PR': round(df_Tabla_Calculos_FactorPotencia['F.P. Mn. III -'].iloc[0], 2),
                         'FP_POT_CAP_MED_PR': round(df_Tabla_Calculos_FactorPotencia['F.P. III -'].iloc[0], 2),
                         'FP_POT_CAP_MAX_PR': round(df_Tabla_Calculos_FactorPotencia['F.P. Mx. III -'].iloc[0], 2),
