@@ -11,6 +11,7 @@ import datetime
 import geopandas as gpd
 from shapely.geometry import Point
 import contextily as cx
+from datetime import datetime
 from staticmap import StaticMap, CircleMarker
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Cm

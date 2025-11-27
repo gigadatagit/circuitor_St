@@ -10,6 +10,7 @@ import login as login
 import datetime
 import geopandas as gpd
 from shapely.geometry import Point
+from datetime import datetime
 import contextily as cx
 from staticmap import StaticMap, CircleMarker
 from docxtpl import DocxTemplate, InlineImage
