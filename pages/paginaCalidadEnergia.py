@@ -119,7 +119,7 @@ if 'correo_electronico' in st.session_state:
                     var_Corriente_Nominal_Value = calcular_Valor_Corriente_Nominal((var2 * 1000), var1)
                     
                     #df = pd.read_parquet(uploaded_file)
-                    df_Read = pd.read_csv(uploaded_file, delimiter=';', encoding="UTF-8-SIG", encoding_errors='ignore')
+                    df_Read = pd.read_csv(uploaded_file, delimiter=';', encoding="UTF-8-SIG", encoding_errors='ignore', decimal=',')
                     #st.dataframe(df_Read.head(5))
                     
                     df = organizar_DataFrame_M_a_M(df_Read)
@@ -130,7 +130,7 @@ if 'correo_electronico' in st.session_state:
                     print(df.index)  # ¿Es continuo? ¿Está vacío?
                     print(df.shape)  # ¿Tiene filas y columnas?
                     
-                    df_Energias_Read = pd.read_csv(uploaded_file2, delimiter=';', encoding="UTF-8-SIG", encoding_errors='ignore')
+                    df_Energias_Read = pd.read_csv(uploaded_file2, delimiter=';', encoding="UTF-8-SIG", encoding_errors='ignore', decimal=',')
                     #st.dataframe(df_Energias_Read.head(5))
 
                     df_Energias = organizar_DataFrame_H_a_H(df_Energias_Read)
