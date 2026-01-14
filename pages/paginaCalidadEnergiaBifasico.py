@@ -41,7 +41,7 @@ if 'correo_electronico' in st.session_state:
             ---
             """)
 
-            plantillaSeleccionada = st.selectbox("Selecciona una Plantilla:", ["Vatia", "GIGA"])
+            plantillaSeleccionada = st.selectbox("Selecciona una Plantilla:", ["Vatia", "ERCO"])
             
             #st.markdown("""
             #---
@@ -152,15 +152,21 @@ if 'correo_electronico' in st.session_state:
                         print("a")
                         #var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/365a61d9e72f3e175c39d5fa6cb1c189e0c70ffa/vars_Template_ETV_Circuitor_VATIA.docx?raw=true"
                         var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/e286ff70b16dff00f819275c3cdb51fe4f3688f5/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
-                    
-                    elif plantillaSeleccionada == "GIGA":
                         
-                        print("a")
-                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/e286ff70b16dff00f819275c3cdb51fe4f3688f5/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
+                    elif plantillaSeleccionada == "ERCO":
+                        
+                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/8d503866c6448de95ffe99ff5ef5a115bca10bd3/plantillaCir_Word_ERCO_NoGenerada.docx?raw=true"
+                    
+                    #elif plantillaSeleccionada == "GIGA":
+                        
+                        #print("a")
+                        #var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/e286ff70b16dff00f819275c3cdb51fe4f3688f5/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
                     
                     else:
                         
                         print("Por favor seleccione una plantilla válida.")
+                        
+                        st.write("Por favor seleccione una plantilla válida.")
                         
                     # Enlace a la Plantilla del Documento de Word que contiene toda la información del Informe
                     url = var_Enlace_Plantilla
