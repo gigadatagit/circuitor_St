@@ -114,10 +114,14 @@ if 'correo_electronico' in st.session_state:
                         
                         print("a")
                         var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/f3f44250a3b53581fb6d788e6f9717d4ac374b87/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
+                        
+                        pass
                     
                     elif plantillaSeleccionada == "ERCO":
                         
                         var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/8d503866c6448de95ffe99ff5ef5a115bca10bd3/plantillaCir_Word_ERCO_NoGenerada.docx?raw=true"
+                        
+                        pass
                     
                     #elif plantillaSeleccionada == "GIGA":
                         
@@ -129,6 +133,8 @@ if 'correo_electronico' in st.session_state:
                         print("Por favor seleccione una plantilla válida.")
                         
                         st.write("Por favor seleccione una plantilla válida.")
+                        
+                        pass
                         
                     # Enlace a la Plantilla del Documento de Word que contiene toda la información del Informe
                     url = var_Enlace_Plantilla
