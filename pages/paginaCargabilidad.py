@@ -112,14 +112,17 @@ if 'correo_electronico' in st.session_state:
                     
                     if plantillaSeleccionada == "Vatia":
                         
-                        print("a")
-                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/f3f44250a3b53581fb6d788e6f9717d4ac374b87/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
+                        #var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/f3f44250a3b53581fb6d788e6f9717d4ac374b87/plantillaCir_Word_VATIA_NoGenerada.docx?raw=true"
+                        
+                        var_Enlace_Plantilla = "templates/plantillaCir_Word_VATIA_NoGenerada.docx"
                         
                         pass
                     
                     elif plantillaSeleccionada == "ERCO":
                         
-                        var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/8d503866c6448de95ffe99ff5ef5a115bca10bd3/plantillaCir_Word_ERCO_NoGenerada.docx?raw=true"
+                        #var_Enlace_Plantilla = "https://github.com/gigadatagit/GIGA_Data/blob/8d503866c6448de95ffe99ff5ef5a115bca10bd3/plantillaCir_Word_ERCO_NoGenerada.docx?raw=true"
+                        
+                        var_Enlace_Plantilla = "templates/plantillaCir_Word_ERCO_NoGenerada.docx"
                         
                         pass
                     
@@ -137,16 +140,18 @@ if 'correo_electronico' in st.session_state:
                         pass
                         
                     # Enlace a la Plantilla del Documento de Word que contiene toda la información del Informe
-                    url = var_Enlace_Plantilla
+                    #url = var_Enlace_Plantilla
 
                     # Petición para Traer la información de esa URL con la Plantilla
-                    response = requests.get(url)
+                    #response = requests.get(url)
 
                     # Guardado de contenido de la Plantilla de Word en un el Almacenamiento de Memoria
-                    template_data = BytesIO(response.content)
+                    #template_data = BytesIO(response.content)
 
                     # Crear una instancia de DocxTemplate - Carga el contenido de la Plantilla del Documento de Word
-                    doc = DocxTemplate(template_data)
+                    #doc = DocxTemplate(template_data)
+
+                    doc = DocxTemplate(var_Enlace_Plantilla)
 
                     # Aquí tenemos una lista de las columnas que se van a graficar a través del tiempo para la tensión
                     list_Columns_Grafico_Tension: list = ['Tensin L12', 'Tensin L23', 'Tensin L31']
